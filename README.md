@@ -10,9 +10,9 @@
 
 <p  float="left">
 
-<img  src="https://github.com/rafaelsilva81/udp-chat/blob/main/res/example1.gif"  />
+<img  src="https://github.com/rafaelsilva81/udp-chat/blob/main/res/example1.gif"  width="350px"/>
 
-<img  src="https://github.com/rafaelsilva81/udp-chat/blob/main/res/example2.gif"  />
+<img  src="https://github.com/rafaelsilva81/udp-chat/blob/main/res/example2.gif"  width="350px"/>
 
 </p>
 

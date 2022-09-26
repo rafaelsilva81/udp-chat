@@ -37,7 +37,7 @@ public class ClientConnection extends Thread {
     /* connect to server */
     public void connect(String name) throws IOException {
         /* create packet */
-        String msg = name + " connected" + getTimeStamp();
+        String msg = "<i>" + name + " connected to the chat!" + getTimeStamp() + "</i>";
         DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length,
                 address,
                 port);

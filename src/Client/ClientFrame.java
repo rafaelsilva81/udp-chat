@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
 
 public class ClientFrame extends javax.swing.JFrame {
         /* make a form using swing */
@@ -47,7 +49,7 @@ public class ClientFrame extends javax.swing.JFrame {
                 /* 3. send button */
                 sendButton = new javax.swing.JButton();
                 /* 4. message output */
-                messageOutput = new javax.swing.JTextArea();
+                messageOutput = new javax.swing.JTextPane();
                 /* 5. clear button */
                 clearButton = new javax.swing.JButton();
 
@@ -68,12 +70,15 @@ public class ClientFrame extends javax.swing.JFrame {
                 sendButton.setText("Send");
                 clearButton.setText("Clear");
 
-                /* make messageOutput bigger */
-                messageOutput.setColumns(30);
-                messageOutput.setRows(10);
-
                 /* make messageOuput not editable */
                 messageOutput.setEditable(false);
+
+                /* set messageOutput to receive html */
+                messageOutput.setContentType("text/html");
+                messageOutput.setText("<html><head></head><body><pre></pre></body></html>");
+
+                /* make messageOutput go full height */
+                messageOutput.setAutoscrolls(true);
 
                 /* add outline and padding to messageOutput */
                 messageOutput.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -135,17 +140,22 @@ public class ClientFrame extends javax.swing.JFrame {
                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                /* make messageOutput bigger */
+                                                                /* make messageOutput go full height */
                                                                 .addComponent(messageOutput,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 200,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                Short.MAX_VALUE)
                                                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 Short.MAX_VALUE)));
 
                 /* set frame properties */
                 pack();
                 setLocationRelativeTo(null);
+                /* set frame bigger */
+                setSize(500, 500);
+                /* make content horizontal and vertical align center */
+                layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] { clearButton,
+                                sendButton });
 
                 /* add action listener to send button */
                 sendButton.addActionListener((ActionEvent evt) -> {
@@ -169,6 +179,8 @@ public class ClientFrame extends javax.swing.JFrame {
         private void sendButtonActionPerformed(ActionEvent evt) {
                 /* get message from messageInput */
                 String message = messageInput.getText();
+                /* make that message bold */
+                message = "<b>" + message + "</b>";
                 /* send message */
                 this.client.send(this.username + ": " + message);
                 /* clear messageInput */
@@ -187,10 +199,14 @@ public class ClientFrame extends javax.swing.JFrame {
                                 System.out.println("mensagem recebida : " + message);
                                 /* if message is not null */
                                 if (message != null) {
-                                        /* append message to messageOutput */
-                                        messageOutput.append(message);
-                                        /* add new line */
-                                        messageOutput.append(System.lineSeparator());
+                                        /* inset message on JtextPane */
+                                        HTMLDocument doc = (HTMLDocument) messageOutput.getStyledDocument();
+                                        try {
+                                                doc.insertAfterEnd(doc.getCharacterElement(doc.getLength()),
+                                                                message + "<br/>");
+                                        } catch (BadLocationException | IOException e) {
+                                                e.printStackTrace();
+                                        }
                                 }
                         }
                 });
@@ -202,7 +218,7 @@ public class ClientFrame extends javax.swing.JFrame {
         private javax.swing.JButton clearButton;
         private javax.swing.JTextField messageInput;
         private javax.swing.JLabel messageInputLabel;
-        private javax.swing.JTextArea messageOutput;
+        private javax.swing.JTextPane messageOutput;
         private javax.swing.JButton sendButton;
 
         /* main method */
